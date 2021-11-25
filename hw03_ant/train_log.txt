@@ -1,0 +1,190 @@
+
+################################################################################
+Model uses cpu
+ Tau = 0.002
+Gamma = 0.99
+Actor_lr = 0.0002
+Critic_LR = 0.0005
+Batch size = 128
+Transitions = 1000000
+
+[2021-11-23 18:49:13] Learning on cpu starts!
+
+################################################################################
+Model uses cpu
+ Tau = 0.002
+Gamma = 0.99
+Actor_lr = 0.0002
+Critic_LR = 0.0005
+Batch size = 128
+Transitions = 1000000
+
+[2021-11-23 18:51:32] Learning on cpu starts!
+[2021-11-23 18:53:53] Step: 10000, Reward mean: 384.62895495535497, Reward std: 166.90417941134632, Episodes: 0, Steps: 0
+[2021-11-23 18:56:52] Step: 20000, Reward mean: 511.46886967062983, Reward std: 66.57452377499972, Episodes: 0, Steps: 0
+[2021-11-23 18:59:46] Step: 30000, Reward mean: 588.1758729749038, Reward std: 77.13936026587452, Episodes: 0, Steps: 0
+[2021-11-23 19:02:39] Step: 40000, Reward mean: 522.6821307480895, Reward std: 64.85670342741642, Episodes: 0, Steps: 0
+[2021-11-23 19:05:35] Step: 50000, Reward mean: 590.6827309512341, Reward std: 55.180845850829215, Episodes: 0, Steps: 0
+[2021-11-23 19:08:27] Step: 60000, Reward mean: 613.8730991875067, Reward std: 112.30255970772032, Episodes: 0, Steps: 0
+[2021-11-23 19:11:29] Step: 70000, Reward mean: 569.5467580963644, Reward std: 40.84306183998839, Episodes: 0, Steps: 0
+[2021-11-23 19:14:26] Step: 80000, Reward mean: 843.5429102921559, Reward std: 49.81049506135435, Episodes: 0, Steps: 0
+[2021-11-23 19:17:15] Step: 90000, Reward mean: 718.6137066145648, Reward std: 61.4313938620376, Episodes: 0, Steps: 0
+[2021-11-23 19:20:06] Step: 100000, Reward mean: 735.7839996256499, Reward std: 63.454896147495035, Episodes: 0, Steps: 0
+[2021-11-23 19:22:55] Step: 110000, Reward mean: 437.68428471100043, Reward std: 123.5650162889785, Episodes: 0, Steps: 0
+[2021-11-23 19:25:47] Step: 120000, Reward mean: 624.9720509008854, Reward std: 20.83076873814456, Episodes: 0, Steps: 0
+[2021-11-23 19:28:42] Step: 130000, Reward mean: 825.8083529447101, Reward std: 38.090286159560804, Episodes: 0, Steps: 0
+[2021-11-23 19:31:34] Step: 140000, Reward mean: 573.0448676576557, Reward std: 162.59048531513662, Episodes: 0, Steps: 0
+[2021-11-23 19:34:28] Step: 150000, Reward mean: 851.9180274966282, Reward std: 48.30191925948896, Episodes: 0, Steps: 0
+[2021-11-23 19:37:22] Step: 160000, Reward mean: 838.9138413650392, Reward std: 70.70577839686038, Episodes: 0, Steps: 0
+[2021-11-23 19:40:17] Step: 170000, Reward mean: 572.3008995480504, Reward std: 21.878100907786994, Episodes: 0, Steps: 0
+[2021-11-23 19:43:19] Step: 180000, Reward mean: 786.2892802435591, Reward std: 58.03588772883445, Episodes: 0, Steps: 0
+[2021-11-23 19:46:15] Step: 190000, Reward mean: 761.1201596406369, Reward std: 57.008540328656075, Episodes: 0, Steps: 0
+[2021-11-23 19:49:21] Step: 200000, Reward mean: 827.5259598428116, Reward std: 65.09179970684625, Episodes: 0, Steps: 0
+[2021-11-23 19:52:18] Step: 210000, Reward mean: 774.3558667329738, Reward std: 16.76727986727426, Episodes: 0, Steps: 0
+[2021-11-23 19:55:20] Step: 220000, Reward mean: 651.7149258119956, Reward std: 71.50070826684822, Episodes: 0, Steps: 0
+[2021-11-23 19:58:23] Step: 230000, Reward mean: 795.8473770637416, Reward std: 125.31530782361166, Episodes: 0, Steps: 0
+[2021-11-23 20:01:21] Step: 240000, Reward mean: 839.778372872033, Reward std: 91.4532751248211, Episodes: 0, Steps: 0
+[2021-11-23 20:04:19] Step: 250000, Reward mean: 915.3988215286569, Reward std: 54.06440880766013, Episodes: 0, Steps: 0
+[2021-11-23 20:07:16] Step: 260000, Reward mean: 1059.4393563484523, Reward std: 53.94068490481702, Episodes: 0, Steps: 0
+[2021-11-23 20:10:16] Step: 270000, Reward mean: 951.9420371098253, Reward std: 48.14585722518572, Episodes: 0, Steps: 0
+[2021-11-23 20:13:45] Step: 280000, Reward mean: 972.7641972197705, Reward std: 60.40492587518057, Episodes: 0, Steps: 0
+[2021-11-23 20:17:06] Step: 290000, Reward mean: 349.8530495005212, Reward std: 153.87167962573784, Episodes: 0, Steps: 0
+[2021-11-23 20:20:04] Step: 300000, Reward mean: 919.8933231449615, Reward std: 70.3879979754685, Episodes: 0, Steps: 0
+[2021-11-23 20:23:07] Step: 310000, Reward mean: 909.1833937013238, Reward std: 26.882022308054797, Episodes: 0, Steps: 0
+[2021-11-23 20:26:06] Step: 320000, Reward mean: 1064.0833480115741, Reward std: 110.08763965423236, Episodes: 0, Steps: 0
+[2021-11-23 20:29:18] Step: 330000, Reward mean: 1142.0773323948329, Reward std: 6.118914795803944, Episodes: 0, Steps: 0
+[2021-11-23 20:32:28] Step: 340000, Reward mean: 861.3383376571743, Reward std: 19.78047388905253, Episodes: 0, Steps: 0
+[2021-11-23 20:35:28] Step: 350000, Reward mean: 1034.6991474369086, Reward std: 52.6942594782237, Episodes: 0, Steps: 0
+[2021-11-23 20:38:39] Step: 360000, Reward mean: 972.4920217007497, Reward std: 47.08308750957867, Episodes: 0, Steps: 0
+[2021-11-23 20:41:34] Step: 370000, Reward mean: 1093.1303389434975, Reward std: 21.245060868558976, Episodes: 0, Steps: 0
+[2021-11-23 20:44:29] Step: 380000, Reward mean: 963.8310714224469, Reward std: 139.99503507914199, Episodes: 0, Steps: 0
+[2021-11-23 20:47:25] Step: 390000, Reward mean: 1013.6822109519599, Reward std: 82.52296455220751, Episodes: 0, Steps: 0
+[2021-11-23 20:50:21] Step: 400000, Reward mean: 870.1654108100523, Reward std: 113.97094616802099, Episodes: 0, Steps: 0
+[2021-11-23 20:53:17] Step: 410000, Reward mean: 995.2836289389339, Reward std: 38.58667372653302, Episodes: 0, Steps: 0
+[2021-11-23 20:56:12] Step: 420000, Reward mean: 980.2701865841576, Reward std: 110.45135530499697, Episodes: 0, Steps: 0
+[2021-11-23 20:59:08] Step: 430000, Reward mean: 1023.7286580882121, Reward std: 30.592764756159113, Episodes: 0, Steps: 0
+[2021-11-23 21:02:03] Step: 440000, Reward mean: 1035.756618505961, Reward std: 13.560305309999482, Episodes: 0, Steps: 0
+[2021-11-23 21:04:59] Step: 450000, Reward mean: 1357.5949099474337, Reward std: 19.99651757011586, Episodes: 0, Steps: 0
+[2021-11-23 21:07:55] Step: 460000, Reward mean: 1459.5599231197143, Reward std: 16.937896668322924, Episodes: 0, Steps: 0
+[2021-11-23 21:10:51] Step: 470000, Reward mean: 1416.2101127356768, Reward std: 9.749133344478723, Episodes: 0, Steps: 0
+[2021-11-23 21:13:46] Step: 480000, Reward mean: 1265.3181251958424, Reward std: 9.606476203856873, Episodes: 0, Steps: 0
+[2021-11-23 21:16:43] Step: 490000, Reward mean: 1406.296031761133, Reward std: 9.353498955518939, Episodes: 0, Steps: 0
+[2021-11-23 21:19:38] Step: 500000, Reward mean: 992.812037406669, Reward std: 83.66048534962324, Episodes: 0, Steps: 0
+[2021-11-23 21:22:33] Step: 510000, Reward mean: 1257.1585817464813, Reward std: 153.00792025625677, Episodes: 0, Steps: 0
+[2021-11-23 21:25:28] Step: 520000, Reward mean: 1530.370088819655, Reward std: 51.25155965405417, Episodes: 0, Steps: 0
+[2021-11-23 21:28:22] Step: 530000, Reward mean: 1346.351619975107, Reward std: 17.72988624049504, Episodes: 0, Steps: 0
+[2021-11-23 21:31:17] Step: 540000, Reward mean: 1333.96850576371, Reward std: 40.09214370234326, Episodes: 0, Steps: 0
+[2021-11-23 21:34:12] Step: 550000, Reward mean: 1568.8055643601738, Reward std: 12.553501121167052, Episodes: 0, Steps: 0
+[2021-11-23 21:37:09] Step: 560000, Reward mean: 1511.283117125043, Reward std: 7.220933101377675, Episodes: 0, Steps: 0
+[2021-11-23 21:40:04] Step: 570000, Reward mean: 1458.748693321123, Reward std: 14.695335984302025, Episodes: 0, Steps: 0
+[2021-11-23 21:43:00] Step: 580000, Reward mean: 1622.0670692103918, Reward std: 12.089211502395157, Episodes: 0, Steps: 0
+[2021-11-23 21:45:54] Step: 590000, Reward mean: 936.5163613719654, Reward std: 270.0966910310542, Episodes: 0, Steps: 0
+[2021-11-23 21:48:53] Step: 600000, Reward mean: 1458.5920183057392, Reward std: 22.750024035151878, Episodes: 0, Steps: 0
+[2021-11-23 21:51:50] Step: 610000, Reward mean: 1604.062432545122, Reward std: 10.877484893080695, Episodes: 0, Steps: 0
+[2021-11-23 21:54:45] Step: 620000, Reward mean: 1623.841466517629, Reward std: 32.80482044065943, Episodes: 0, Steps: 0
+[2021-11-23 21:57:40] Step: 630000, Reward mean: 1536.9777147458958, Reward std: 13.086434972897052, Episodes: 0, Steps: 0
+[2021-11-23 22:00:35] Step: 640000, Reward mean: 1567.6600010501243, Reward std: 17.427318069719835, Episodes: 0, Steps: 0
+[2021-11-23 22:03:29] Step: 650000, Reward mean: 1694.8641959563568, Reward std: 51.21635400759788, Episodes: 0, Steps: 0
+[2021-11-23 22:06:24] Step: 660000, Reward mean: 1496.5925552559888, Reward std: 159.0517837930565, Episodes: 0, Steps: 0
+[2021-11-23 22:09:19] Step: 670000, Reward mean: 1647.8473184113295, Reward std: 5.445172346237645, Episodes: 0, Steps: 0
+[2021-11-23 22:12:20] Step: 680000, Reward mean: 1438.7170165314935, Reward std: 367.7660744027083, Episodes: 0, Steps: 0
+[2021-11-23 22:15:25] Step: 690000, Reward mean: 1723.005929225809, Reward std: 20.112584718117823, Episodes: 0, Steps: 0
+[2021-11-23 22:18:28] Step: 700000, Reward mean: 1510.6408007882346, Reward std: 9.939388156232589, Episodes: 0, Steps: 0
+[2021-11-23 22:21:31] Step: 710000, Reward mean: 1567.5009280391075, Reward std: 29.774742299217333, Episodes: 0, Steps: 0
+[2021-11-23 22:24:37] Step: 720000, Reward mean: 1772.5309211112913, Reward std: 5.76121349273091, Episodes: 0, Steps: 0
+[2021-11-23 22:27:36] Step: 730000, Reward mean: 1672.1317628712175, Reward std: 16.264294888441103, Episodes: 0, Steps: 0
+[2021-11-23 22:30:31] Step: 740000, Reward mean: 1532.3710948880164, Reward std: 51.8009640983713, Episodes: 0, Steps: 0
+[2021-11-23 22:33:27] Step: 750000, Reward mean: 1593.1969553811127, Reward std: 22.074137766294715, Episodes: 0, Steps: 0
+[2021-11-23 22:36:22] Step: 760000, Reward mean: 1157.3129104514012, Reward std: 159.580803036496, Episodes: 0, Steps: 0
+[2021-11-23 22:39:19] Step: 770000, Reward mean: 1560.896564473231, Reward std: 19.749579937028546, Episodes: 0, Steps: 0
+[2021-11-23 22:42:14] Step: 780000, Reward mean: 1488.9882790295367, Reward std: 111.09586807516446, Episodes: 0, Steps: 0
+[2021-11-23 22:45:09] Step: 790000, Reward mean: 1440.3006234286597, Reward std: 217.16442365854272, Episodes: 0, Steps: 0
+[2021-11-23 22:48:04] Step: 800000, Reward mean: 1588.0312875121726, Reward std: 20.62408479185588, Episodes: 0, Steps: 0
+[2021-11-23 22:51:00] Step: 810000, Reward mean: 1651.9782332132374, Reward std: 8.257476133343994, Episodes: 0, Steps: 0
+[2021-11-23 22:53:55] Step: 820000, Reward mean: 1617.0372693262402, Reward std: 142.63806788641415, Episodes: 0, Steps: 0
+[2021-11-23 22:56:51] Step: 830000, Reward mean: 1576.1347178401184, Reward std: 11.056257231025784, Episodes: 0, Steps: 0
+[2021-11-23 22:59:47] Step: 840000, Reward mean: 1598.3421332208834, Reward std: 109.89920442560688, Episodes: 0, Steps: 0
+[2021-11-23 23:02:43] Step: 850000, Reward mean: 1588.7229534317019, Reward std: 98.24290191560112, Episodes: 0, Steps: 0
+[2021-11-23 23:05:39] Step: 860000, Reward mean: 1570.419130498547, Reward std: 17.169072889837256, Episodes: 0, Steps: 0
+[2021-11-23 23:08:35] Step: 870000, Reward mean: 1821.9571512243397, Reward std: 9.81093160614157, Episodes: 0, Steps: 0
+[2021-11-23 23:11:31] Step: 880000, Reward mean: 1436.2395204668803, Reward std: 199.14580426181013, Episodes: 0, Steps: 0
+[2021-11-23 23:14:26] Step: 890000, Reward mean: 1676.9547937638793, Reward std: 28.046147581385338, Episodes: 0, Steps: 0
+[2021-11-23 23:17:22] Step: 900000, Reward mean: 1779.4793753236765, Reward std: 22.40902921914446, Episodes: 0, Steps: 0
+[2021-11-23 23:20:17] Step: 910000, Reward mean: 1656.9188116017485, Reward std: 61.12445515241118, Episodes: 0, Steps: 0
+[2021-11-23 23:23:13] Step: 920000, Reward mean: 1780.0972327857592, Reward std: 15.327565058120983, Episodes: 0, Steps: 0
+[2021-11-23 23:26:08] Step: 930000, Reward mean: 1563.8690224689979, Reward std: 71.15700809736191, Episodes: 0, Steps: 0
+[2021-11-23 23:29:04] Step: 940000, Reward mean: 1668.156432549827, Reward std: 17.96047907339082, Episodes: 0, Steps: 0
+[2021-11-23 23:32:00] Step: 950000, Reward mean: 878.7881426930655, Reward std: 166.15556720330986, Episodes: 0, Steps: 0
+[2021-11-23 23:34:56] Step: 960000, Reward mean: 1495.546484757151, Reward std: 141.54265968013652, Episodes: 0, Steps: 0
+[2021-11-23 23:37:51] Step: 970000, Reward mean: 1683.9158340606652, Reward std: 22.465244348795324, Episodes: 0, Steps: 0
+[2021-11-23 23:40:47] Step: 980000, Reward mean: 1839.9539398174395, Reward std: 6.81820058288502, Episodes: 0, Steps: 0
+[2021-11-23 23:43:43] Step: 990000, Reward mean: 1284.6863744919992, Reward std: 228.29712444025455, Episodes: 0, Steps: 0
+[2021-11-23 23:46:38] Step: 1000000, Reward mean: 1749.7206092368829, Reward std: 8.986797369354912, Episodes: 0, Steps: 0
+
+################################################################################
+Model uses cpu
+ Tau = 0.002
+Gamma = 0.99
+Actor_lr = 0.0003
+Critic_LR = 0.0007
+Batch size = 128
+Transitions = 2000000
+
+[2021-11-24 09:33:10] Learning on cpu starts!
+[2021-11-24 09:42:20] Step: 20000, Reward mean: 416.84800256276117, Reward std: 82.91244433715644
+[2021-11-24 09:52:17] Step: 40000, Reward mean: 276.0604056590023, Reward std: 53.71041952962171
+
+################################################################################
+Model uses cpu
+ Tau = 0.002
+Gamma = 0.99
+Actor_lr = 0.0003
+Critic_LR = 0.0007
+Batch size = 128
+Transitions = 2000000
+
+[2021-11-24 05:01:40] Learning on cpu starts!
+
+################################################################################
+Model uses cpu
+ Tau = 0.002
+Gamma = 0.99
+Actor_lr = 0.0003
+Critic_LR = 0.0007
+Batch size = 128
+Transitions = 2000000
+
+[2021-11-24 05:11:40] Learning on cpu starts!
+
+################################################################################
+Model uses cpu
+ Tau = 0.002
+Gamma = 0.99
+Actor_lr = 0.0003
+Critic_LR = 0.0007
+Batch size = 128
+Transitions = 2000000
+
+[2021-11-24 05:11:55] Learning on cpu starts!
+
+################################################################################
+Model uses cpu
+ Tau = 0.002
+Gamma = 0.99
+Actor_lr = 0.0003
+Critic_LR = 0.0007
+Batch size = 128
+Transitions = 2000000
+
+[2021-11-24 05:12:45] Learning on cpu starts!
+
+################################################################################
+Model uses cpu
+ Tau = 0.002
+Gamma = 0.99
+Actor_lr = 0.0003
+Critic_LR = 0.0007
+Batch size = 128
+Transitions = 2000000
+
+[2021-11-24 05:14:00] Learning on cpu starts!

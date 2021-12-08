@@ -34,7 +34,7 @@ class Agent:
     def __init__(self):
         self.model = dqn_net(8,4)
             # torch.load(__file__[:-8] + "/best_agent.pkl")
-        self.model.load_state_dict(torch.load(__file__[:-8] + "/best_agent.pth"))
+        self.model.load_state_dict(torch.load(__file__[:-8] + "/best_agent_6.pth"))
     def act(self, state):
         state = np.array(state)
         actions = self.model(torch.FloatTensor(state)).argmax()

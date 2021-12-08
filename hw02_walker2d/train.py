@@ -6,26 +6,27 @@ import torch
 from torch import nn
 from torch.distributions import Normal
 from torch.nn import functional as F
-from torch.optim import Adam
+from torch.optim import Adam, SGD
 import random
+from datetime import datetime
 
 ENV_NAME = "Walker2DBulletEnv-v0"
 
 LAMBDA = 0.95
 GAMMA = 0.99
 
-ACTOR_LR = 4e-4
-CRITIC_LR = 2e-4
+ACTOR_LR = 8e-4
+CRITIC_LR = 4e-4
 
 CLIP = 0.2
-ENTROPY_COEF = 1e-1
-BATCHES_PER_UPDATE = 2048
+ENTROPY_COEF = 2e-2
+BATCHES_PER_UPDATE = 64
 BATCH_SIZE = 64
 
-MIN_TRANSITIONS_PER_UPDATE = 32
-MIN_EPISODES_PER_UPDATE = 8
+MIN_TRANSITIONS_PER_UPDATE = 2048
+MIN_EPISODES_PER_UPDATE = 4
 
-ITERATIONS = 1000
+ITERATIONS = 3000
 
 
 def compute_lambda_returns_and_gae(trajectory):
@@ -51,30 +52,36 @@ class Actor(nn.Module):
         # You can do this by defining log_sigma as nn.Parameter(torch.zeros(...))
         self.model = nn.Sequential(
             nn.Linear(state_dim, 256),
-            nn.ELU(),
+            nn.ReLU(),
             nn.Linear(256, 256),
-            nn.ELU(),
+            nn.ReLU(),
             nn.Linear(256, 256),
-            nn.ELU(),
+            nn.ReLU(),
             nn.Linear(256, 256),
-            nn.ELU(),
-            nn.Linear(256, action_dim),
-            nn.ELU(),
+            nn.ReLU(),
+            nn.Linear(256, 256),
+            nn.ReLU(),
         )
-        self.sigma = nn.Parameter(torch.zeros(action_dim))
-        # self.sigma = torch.eye(action_dim) * 0.5
+        self.mean = nn.Linear(256, action_dim)
+        self.sigma = nn.Sequential(
+            nn.Linear(256, action_dim),
+            nn.ELU()
+        )
+        # self.sigma = torch.zeros(action_dim)
 
     def compute_proba(self, state, action):
         # Returns probability of action according to current policy and distribution of actions
         _, pa, distribution = self.act(state)
         proba = distribution.log_prob(action).sum(-1)
-        return proba
+        return proba, distribution
 
     def act(self, state):
         # Returns an action (with tanh), not-transformed action (without tanh) and distribution of non-transformed actions
         # Remember: agent is not deterministic, sample actions from distribution (e.g. Gaussian)
-        mean = self.model(state)
-        distribution = Normal(mean, torch.exp(self.sigma))
+        latent = self.model(state)
+        mean = self.mean(latent)
+        sigma = torch.exp(-self.sigma(latent))
+        distribution = Normal(mean, sigma)
         action = distribution.sample()
         tanh_action = torch.tanh(action)
         return tanh_action, action, distribution
@@ -85,13 +92,12 @@ class Critic(nn.Module):
         super().__init__()
         self.model = nn.Sequential(
             nn.Linear(state_dim, 256),
-            nn.ELU(),
+            nn.ReLU(),
             nn.Linear(256, 256),
-            nn.ELU(),
+            nn.ReLU(),
             nn.Linear(256, 256),
-            nn.ELU(),
+            nn.ReLU(),
             nn.Linear(256, 1),
-            nn.ELU(),
         )
 
     def get_value(self, state):
@@ -100,48 +106,47 @@ class Critic(nn.Module):
 
 class PPO:
     def __init__(self, state_dim, action_dim):
-        self.actor = Actor(state_dim, action_dim)
-        self.critic = Critic(state_dim)
-        self.actor_optim = Adam(self.actor.parameters(), ACTOR_LR)
-        self.critic_optim = Adam(self.critic.parameters(), CRITIC_LR)
-        self.actor_scheduler = torch.optim.lr_scheduler.CyclicLR(self.actor_optim, base_lr=2e-4,
-                                                                 max_lr=5e-3, step_size_up=50, mode='triangular2',
-                                                                 cycle_momentum=False)
-        self.critic_scheduler = torch.optim.lr_scheduler.CyclicLR(self.critic_optim, base_lr=2e-4,
-                                                                  max_lr=5e-3, step_size_up=50, mode='triangular2',
-                                                                  cycle_momentum=False)
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self.actor = Actor(state_dim, action_dim).to(self.device)
+        self.critic = Critic(state_dim).to(self.device)
+        self.actor_optim = Adam(self.actor.parameters(), ACTOR_LR, amsgrad=True)
+        self.critic_optim = Adam(self.critic.parameters(), CRITIC_LR, amsgrad=True)
+
+        # self.actor_scheduler = torch.optim.lr_scheduler.CyclicLR(self.actor_optim, base_lr=1e-3,
+        #                                                          max_lr=1e-2, step_size_up=100, mode='triangular2',
+        #                                                          cycle_momentum=False)
+        # self.critic_scheduler = torch.optim.lr_scheduler.CyclicLR(self.critic_optim, base_lr=5e-4,
+        #                                                           max_lr=5e-3, step_size_up=100, mode='triangular2',
+        #                                                           cycle_momentum=False)
 
     def update(self, trajectories):
         transitions = [t for traj in trajectories for t in traj]  # Turn a list of trajectories into list of transitions
         state, action, old_prob, target_value, advantage = zip(*transitions)
-        state = np.array(state)
-        action = np.array(action)
-        old_prob = np.array(old_prob)
-        target_value = np.array(target_value)
+        state = torch.FloatTensor(np.array(state)).to(self.device)
+        action = torch.FloatTensor(np.array(action)).to(self.device)
+        old_prob = torch.FloatTensor(np.array(old_prob)).to(self.device)
+        target_value = torch.FloatTensor(np.array(target_value)).to(self.device)
         advantage = np.array(advantage)
-        advantage = (advantage - advantage.mean()) / (advantage.std() + 1e-8)
-
-        a_loss = []
-        c_loss = []
+        advantage = torch.FloatTensor((advantage - advantage.mean()) / (advantage.std() + 1e-8)).to(self.device)
 
         for _ in range(BATCHES_PER_UPDATE):
-            idx = np.random.randint(0, len(transitions), BATCH_SIZE)  # Choose random batch
-            s = torch.tensor(state[idx]).float()
-            a = torch.tensor(action[idx]).float()
-            op = torch.tensor(old_prob[idx]).float()  # Probability of the action in state s.t. old policy
-            v = torch.tensor(target_value[idx]).float()  # Estimated by lambda-returns
-            adv = torch.tensor(advantage[idx]).float()  # Estimated by generalized advantage estimation
+            # idx = np.random.randint(0, len(transitions), BATCH_SIZE)  # Choose random batch
+            idx = torch.randint(0, len(transitions), (BATCH_SIZE,)).to(self.device)
+            s = state[idx]
+            a = action[idx]
+            op = old_prob[idx]      # Probability of the action in state s.t. old policy
+            v = target_value[idx]   # Estimated by lambda-returns
+            adv = advantage[idx]    # Estimated by generalized advantage estimation
 
             # TODO: Update actor here
-            log_prob = self.actor.compute_proba(s, a)
+            log_prob, distribution = self.actor.compute_proba(s, a)
             ratio = torch.exp(log_prob - op)
-            surr1 = ratio * -adv
-            surr2 = torch.clamp(ratio, 1 - CLIP, 1 + CLIP) * -adv
-            actor_loss = (torch.max(surr1, surr2)).mean()
+            surr1 = ratio * adv
+            surr2 = torch.clamp(ratio, 1 - CLIP, 1 + CLIP) * adv
+            actor_loss = (-torch.min(surr1, surr2)).mean() - ENTROPY_COEF * distribution.entropy().mean()
             self.actor_optim.zero_grad()
             actor_loss.backward()
             self.actor_optim.step()
-            a_loss.append(actor_loss.detach().numpy())
 
             # TODO: Update critic here
             critic_value = self.critic.get_value(s)
@@ -149,28 +154,27 @@ class PPO:
             self.critic_optim.zero_grad()
             critic_loss.backward()
             self.critic_optim.step()
-            c_loss.append(critic_loss.detach().numpy())
 
-        self.critic_scheduler.step()
-        self.actor_scheduler.step()
-        return np.array(a_loss).mean(), np.array(c_loss).mean()
+        # self.critic_scheduler.step()
+        # self.actor_scheduler.step()
 
     def get_value(self, state):
         with torch.no_grad():
-            state = torch.tensor(np.array([state])).float()
+            state = torch.FloatTensor(np.array([state])).to(self.device)
             value = self.critic.get_value(state)
-        return value.cpu().item()
+        return value.item()
 
     def act(self, state):
         with torch.no_grad():
-            state = torch.tensor(np.array([state])).float()
+            state = torch.FloatTensor(np.array([state])).to(self.device)
             action, pure_action, distr = self.actor.act(state)
             log_prob = distr.log_prob(pure_action).sum(-1)
             # log_prob = distr.log_prob(pure_action)
         return action.cpu().numpy()[0], pure_action.cpu().numpy()[0], log_prob.cpu().item()
 
     def save(self, name="agent.pkl"):
-        torch.save(self.actor, name)
+        torch.save(self.actor.state_dict(), name)
+        torch.save(self.critic.state_dict(), 'critic_' + name)
 
 
 def evaluate_policy(env, agent, episodes=5):
@@ -200,19 +204,58 @@ def sample_episode(env, agent):
     return compute_lambda_returns_and_gae(trajectory)
 
 
-def start():
+def start(load_model=False, colab=False):
     torch.manual_seed(12345)
+    np.random.seed(3141592)
     env = make(ENV_NAME)
     ppo = PPO(state_dim=env.observation_space.shape[0], action_dim=env.action_space.shape[0])
+    if load_model:
+        ppo.actor.load_state_dict(torch.load(__file__[:-8] + "/best_agent_.pth"))
+        ppo.critic.load_state_dict(torch.load(__file__[:-8] + "/critic_best_agent_.pth"))
+
+    log_str = []
+
+    splt_str = '\n'
+    for _ in range(80):
+        splt_str += '#'
+    splt_str += '\n'
+    log_str.append(splt_str)
+    if load_model:
+        log_str.append("Pretrained model has been loaded!\n")
+    strt_msg = f"Model uses {ppo.device}\n Lambda = {LAMBDA}\nGamma = {GAMMA}\n" \
+               f"Actor_lr = {ACTOR_LR}\n" \
+               f"Critic_LR = {CRITIC_LR}\n" \
+               f"Clip = {CLIP}\n" \
+               f"Entropy_coef = {ENTROPY_COEF}\n" \
+               f"Batches per update = {BATCHES_PER_UPDATE}\n" \
+               f"Batch size = {BATCH_SIZE}\n" \
+               f"Min transition per update = {MIN_TRANSITIONS_PER_UPDATE}\n" \
+               f"Min episode per update = {MIN_EPISODES_PER_UPDATE}\n" \
+               f"Irerations = {ITERATIONS}\n" \
+               "\n"
+    log_str.append(strt_msg)
+    if not colab:
+        with open("train_log.txt", "a") as myfile:
+            for st in log_str:
+                myfile.write(st)
+
     state = env.reset()
     episodes_sampled = 0
     steps_sampled = 0
     max_reward = 0
+    msg = f"[{datetime.now():%Y-%m-%d %H:%M:%S}] Learning on {ppo.device} starts!"
+
+    print(msg)
+    if colab:
+        log_str.append(msg)
+    else:
+        with open("train_log.txt", "a") as myfile:
+            myfile.write(msg+'\n')
+
     for i in range(ITERATIONS):
         trajectories = []
         steps_ctn = 0
 
-        a_loss, c_loss = [], []
         while len(trajectories) < MIN_EPISODES_PER_UPDATE or steps_ctn < MIN_TRANSITIONS_PER_UPDATE:
             traj = sample_episode(env, ppo)
             steps_ctn += len(traj)
@@ -220,20 +263,25 @@ def start():
         episodes_sampled += len(trajectories)
         steps_sampled += steps_ctn
 
-        al, cl = ppo.update(trajectories)
-        a_loss.append(al)
-        c_loss.append(cl)
+        ppo.update(trajectories)
 
         if (i + 1) % (ITERATIONS // 100) == 0:
-            rewards = evaluate_policy(env, ppo, 5)
-            print(
-                f"Step: {i + 1}, Reward mean: {np.mean(rewards)}, Reward std: {np.std(rewards)}, Episodes: {episodes_sampled}, Steps: {steps_sampled}")
-            print(f"Actor mean loss: {np.array(a_loss).mean()}, Critic mean loss: {np.array(c_loss).mean()}")
-            a_loss, c_loss = [], []
-            # ppo.save()
+            rewards = evaluate_policy(env, ppo, 20)
+            msg = f"[{datetime.now():%Y-%m-%d %H:%M:%S}] Step: {i + 1}, Reward mean: {np.mean(rewards)}, Reward std: {np.std(rewards)}, Episodes: {episodes_sampled}, Steps: {steps_sampled}"
+            print(msg)
+            if colab:
+                log_str.append(msg)
+            else:
+                with open("train_log.txt", "a") as myfile:
+                    myfile.write(msg+'\n')
+            ppo.save('agent.pth')
             if np.mean(rewards) > max_reward:
                 max_reward = np.mean(rewards)
-                ppo.save('best_agent.pkl')
+                ppo.save('best_agent.pth')
+    if colab:
+        with open("train_log.txt", "a") as myfile:
+            for st in log_str:
+                myfile.write(st)
 
 
 if __name__ == "__main__":

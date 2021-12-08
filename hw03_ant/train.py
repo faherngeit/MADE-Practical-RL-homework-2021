@@ -12,12 +12,12 @@ from datetime import datetime
 
 GAMMA = 0.99
 TAU = 0.002
-CRITIC_LR = 7e-4
-ACTOR_LR = 3e-4
+CRITIC_LR = 8e-4
+ACTOR_LR = 4e-4
 # DEVICE = "cpu"
-BATCH_SIZE = 256
+BATCH_SIZE = 128
 ENV_NAME = "AntBulletEnv-v0"
-TRANSITIONS = 2_000_000
+TRANSITIONS = 4_000_000
 
 
 def soft_update(target, source):
@@ -30,6 +30,8 @@ class Actor(nn.Module):
         super().__init__()
         self.model = nn.Sequential(
             nn.Linear(state_dim, 256),
+            nn.ReLU(),
+            nn.Linear(256, 256),
             nn.ReLU(),
             nn.Linear(256, 256),
             nn.ReLU(),
@@ -46,6 +48,8 @@ class Critic(nn.Module):
         super().__init__()
         self.model = nn.Sequential(
             nn.Linear(state_dim + action_dim, 256),
+            nn.ReLU(),
+            nn.Linear(256, 256),
             nn.ReLU(),
             nn.Linear(256, 256),
             nn.ReLU(),
@@ -194,7 +198,7 @@ def run(colab=False):
 
         state = next_state if not done else env.reset()
 
-        if (i + 1) % (TRANSITIONS // 100) == 0:
+        if (i + 1) % (TRANSITIONS // 200) == 0:
             rewards = evaluate_policy(test_env, td3, 25)
             # print(f"Step: {i + 1}, Reward mean: {np.mean(rewards)}, Reward std: {np.std(rewards)}")
             msg = f"[{datetime.now():%Y-%m-%d %H:%M:%S}] Step: {i + 1}, Reward mean: {np.mean(rewards)}, Reward std: {np.std(rewards)}"
@@ -208,6 +212,10 @@ def run(colab=False):
             if np.mean(rewards) > max_reward:
                 max_reward = np.mean(rewards)
                 td3.save('best_agent.pth')
+
+    if colab:
+        with open("train_log.txt", "a") as myfile:
+            myfile.write(log_str)
 
 
 if __name__ == "__main__":

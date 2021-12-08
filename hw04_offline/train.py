@@ -25,9 +25,9 @@ class BehavioralCloning(nn.Module):
         super().__init__()
         self.model = nn.Sequential(
             nn.Linear(19, hidden),
-            nn.ELU(),
+            nn.ReLU(),
             nn.Linear(hidden, hidden),
-            nn.ELU(),
+            nn.ReLU(),
             nn.Linear(hidden, 5),
             nn.Tanh()
         )
@@ -35,12 +35,15 @@ class BehavioralCloning(nn.Module):
     def get_action(self, state):
         return self.model(state)
 
+    def save(self, name="agent.pth"):
+        torch.save(self.model.state_dict(), name)
+
 
 def train():
     model = BehavioralCloning(256)
     optim = torch.optim.Adam(model.parameters(), lr=1e-4)
-    dataset = TransitionDataset("optimal.npz")
-    for _ in tqdm.tqdm(range(200)):
+    dataset = TransitionDataset("suboptimal.npz")
+    for _ in tqdm.tqdm(range(500)):
         dataloader = DataLoader(dataset, batch_size=64, shuffle=True)
         for batch in dataloader:
             state, action, _, _, _ = batch
@@ -49,8 +52,21 @@ def train():
             optim.zero_grad()
             loss.backward()
             optim.step()
+    print(f"Final Loss value: {loss}")
+    dataset = TransitionDataset("optimal.npz")
+    for _ in tqdm.tqdm(range(400)):
+        dataloader = DataLoader(dataset, batch_size=64, shuffle=True)
+        for batch in dataloader:
+            state, action, _, _, _ = batch
+            action_pred = model.get_action(state)
+            loss = F.mse_loss(action_pred, action)
+            optim.zero_grad()
+            loss.backward()
+            optim.step()
+    print(f"Final Loss value: {loss}")
     return model
 
 
 if __name__=="__main__":
     model = train()
+    model.save()
